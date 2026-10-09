@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 
-namespace GildedRose.Console;
-
-public class Program
+namespace GildedRose.Console
 {
-    public IList<Item> Items = new List<Item>();
 
-    static void Main(string[] args)
+    public class Program
     {
-        System.Console.WriteLine("OMGHAI!");
+        public IList<Item> Items = new List<Item>();
 
-        var app = new Program()
-                      {
-                          Items = new List<Item>
+        static void Main(string[] args)
+        {
+            System.Console.WriteLine("OMGHAI!");
+
+            var app = new Program()
+            {
+                Items = new List<Item>
                                       {
                                           new Item {Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20},
                                           new Item {Name = "Aged Brie", SellIn = 2, Quality = 0},
@@ -27,95 +28,28 @@ public class Program
                                           new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
                                       }
 
-                      };
+            };
 
-        app.UpdateQuality();
+            app.UpdateQuality();
 
-        System.Console.ReadKey();
-    }
+            System.Console.ReadKey();
+        }
 
-    public void UpdateQuality()
-    {
-        for (var i = 0; i < Items.Count; i++)
+        public void UpdateQuality()
         {
-            if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
+            foreach (var item in Items)
             {
-                if (Items[i].Quality > 0)
-                {
-                    if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                    {
-                        Items[i].Quality = Items[i].Quality - 1;
-                    }
-                }
-            }
-            else
-            {
-                if (Items[i].Quality < 50)
-                {
-                    Items[i].Quality = Items[i].Quality + 1;
-
-                    if (Items[i].Name == "Backstage passes to a TAFKAL80ETC concert")
-                    {
-                        if (Items[i].SellIn < 11)
-                        {
-                            if (Items[i].Quality < 50)
-                            {
-                                Items[i].Quality = Items[i].Quality + 1;
-                            }
-                        }
-
-                        if (Items[i].SellIn < 6)
-                        {
-                            if (Items[i].Quality < 50)
-                            {
-                                Items[i].Quality = Items[i].Quality + 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-            {
-                Items[i].SellIn = Items[i].SellIn - 1;
-            }
-
-            if (Items[i].SellIn < 0)
-            {
-                if (Items[i].Name != "Aged Brie")
-                {
-                    if (Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
-                    {
-                        if (Items[i].Quality > 0)
-                        {
-                            if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                            {
-                                Items[i].Quality = Items[i].Quality - 1;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Items[i].Quality = Items[i].Quality - Items[i].Quality;
-                    }
-                }
-                else
-                {
-                    if (Items[i].Quality < 50)
-                    {
-                        Items[i].Quality = Items[i].Quality + 1;
-                    }
-                }
+                ItemUpdaterFactory.For(item).Update(item);
             }
         }
     }
-}
 
-public class Item
-{
-    public string Name { get; set; } = "";
+    public class Item
+    {
+        public string Name { get; set; } = "";
 
-    public int SellIn { get; set; }
+        public int SellIn { get; set; }
 
-    public int Quality { get; set; }
+        public int Quality { get; set; }
+    }
 }
